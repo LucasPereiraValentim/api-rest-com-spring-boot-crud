@@ -1,6 +1,7 @@
 package br.com.lucas.apirest.controllers;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -38,7 +39,7 @@ public class UsuarioController {
 	
 	@DeleteMapping(value = "excluir")
 	@ResponseBody
-	public ResponseEntity<String> excluir(@RequestParam Long idUsuario) {
+	public ResponseEntity<String> excluir(@RequestParam(name = "idUsuario") Long idUsuario) {
 		
 		usuarioRepository.deleteById(idUsuario);
 		
@@ -54,5 +55,14 @@ public class UsuarioController {
     	List<Usuario> lista = usuarioRepository.findAll(); // Retorna todos os registros da tabela Usuario
     	
     	return new ResponseEntity<List<Usuario>>(lista, HttpStatus.OK); //retorna um JSON
+    }
+    
+    @GetMapping(value = "buscarusuario")
+    @ResponseBody
+    public ResponseEntity<Usuario> pesquisarUsuario(@RequestParam(name = "idUsuario") Long idUsuario){
+    	
+    	Usuario usuario = usuarioRepository.findById(idUsuario).get();
+    	
+    	return new ResponseEntity<Usuario>(usuario, HttpStatus.OK);
     }
 }
