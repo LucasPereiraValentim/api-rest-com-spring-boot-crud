@@ -14,7 +14,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long>{
 	
 	@Transactional(readOnly = true)
 	@Query(value = "select u from Usuario u where upper(trim(u.nome)) like %?1%")
-	public List<Usuario> buscarPorNome(String nome);
+	public List<Usuario> buscarPorNome(String nome); 
 	
 	
 	

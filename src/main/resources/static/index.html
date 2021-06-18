@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Spring Boot</title>
+
+<!-- Bootstrap CSS -->
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x"
+	crossorigin="anonymous">
+
+</head>
+<body>
+
+	<div class="form">
+		<form action="" id="formCadastroUser">
+			<div class="mb-3">
+				<h3>Spring Boot API REST - Formulário</h3>
+				<label for="exampleFormControlInput1" class="form-label">Id</label>
+				<input type="number" class="form-control" id="id" placeholder="Id"
+					readonly="true">
+			</div>
+			<div class="mb-3">
+				<label for="exampleFormControlInput1" class="form-label">Nome</label>
+				<input type="text" class="form-control" id="nome" placeholder="Nome">
+			</div>
+			<div class="mb-3">
+				<label for="exampleFormControlInput1" class="form-label">Idade</label>
+				<input type="number" class="form-control" id="idade"
+					placeholder="Idade">
+			</div>
+	</div>
+	<button type="button" class="btn btn-success" onclick="salvarUsuario()">Salvar/Atualizar</button>
+	<button type="button" class="btn btn-danger"
+		onclick="document.getElementById('formCadastroUser').reset();">Limpar
+		Campos</button>
+	<button type="button" class="btn btn-primary" data-bs-toggle="modal"
+		data-bs-target="#exampleModal">Pesquisar Usuário</button>
+	</form>
+
+	<div class="modal fade" id="exampleModal" tabindex="-1"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Pesquisa de
+						Usuário</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<form>
+						<div class="mb-3">
+							<label for="recipient-name" class="col-form-label">Nome
+								do Usuário</label> <input type="text" class="form-control"
+								id="nomePesquisa" placeholder="Nome">
+						</div>
+					</form>
+				</div>
+				<table class="table table-success table-striped"
+					id="tabelaResultPesquisar">
+					<thead>
+						<tr>
+							<th scope="col">Id</th>
+							<th scope="col">Nome</th>
+							<th scope="col">Idade</th>
+							<th scope="col">Editar</th>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-bs-dismiss="modal">Fechar</button>
+					<button type="button" class="btn btn-primary"
+						onclick="pesquisarUsuario()">Pesquisar</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+		integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+		crossorigin="anonymous"></script>
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
+		crossorigin="anonymous"></script>
+
+
+	<script type="text/javascript">
+		function salvarUsuario() {
+			var id = $("#id").val();
+			var nome = $("#nome").val();
+			var idade = $("#idade").val();
+
+			$.ajax({
+				method : "POST",
+				url : "salvar",
+				data : JSON.stringify({
+					id : id,
+					nome : nome,
+					idade : idade
+				}),
+				contentType : "application/json; charset=utf-8",
+				success : function(response) {
+					$("#id").val(response.id);
+					alert("Salvo com sucesso!");
+				}
+			}).fail(function(xhr, status, errorThrown) {
+				alert("Erro ao salvar!");
+			});
+		}
+
+		function pesquisarUsuario() {
+			var nomePesquisa = $("#nomePesquisa").val();
+
+			if (nomePesquisa != null && nomePesquisa != '') {
+				$.ajax({
+							method : "GET",
+							url : "pesquisarPorNome",
+							data : "nome=" + nomePesquisa,
+							success : function(response) {
+								$('#tabelaResultPesquisar > tbody > tr').remove();
+								for (var i = 0; i < response.length; i++) {
+									$('#tabelaResultPesquisar > tbody').append('<tr><td>'+response[i].id+'</td><td>'+response[i].nome+'</td><td>'+response[i].idade+'<td><button type="button" class="btn btn-dark">Editar</button></td></tr>');
+								}
+							}
+						}).fail(function(xhr, status, errorThrown) {
+					alert("Erro ao buscar!");
+				});
+			}
+		}
+	</script>
+
+</body>
+</html>

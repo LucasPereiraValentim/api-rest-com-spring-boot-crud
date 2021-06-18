@@ -18,10 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.lucas.apirest.model.Usuario;
 import br.com.lucas.apirest.repository.UsuarioRepository;
 
-/**
- *
- * A sample greetings controller to return greeting text
- */
+
 @RestController
 public class UsuarioController {
 	
@@ -80,7 +77,7 @@ public class UsuarioController {
     
     }
     
-    @GetMapping(value = "buscarPorNome")
+    @GetMapping(value = "pesquisarPorNome")
     @ResponseBody
     public ResponseEntity<List<Usuario>> buscarPorNome(@RequestParam(name = "nome") String nome){
     	
