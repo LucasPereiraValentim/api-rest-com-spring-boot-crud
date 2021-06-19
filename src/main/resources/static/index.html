@@ -1,16 +1,23 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-<meta charset="UTF-8">
-<title>Spring Boot</title>
+	<meta charset="UTF-8">
+	<title>Spring Boot</title>
 
-<!-- Bootstrap CSS -->
-<link
+	<!-- Bootstrap CSS -->
+	<link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css"
 	rel="stylesheet"
 	integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x"
 	crossorigin="anonymous">
-
+	<style>
+		html{
+			margin-left: 90px;
+			margin-right: 90px;
+			margin-top: 10%;
+		}
+	
+	</style>
 </head>
 <body>
 
@@ -32,7 +39,7 @@
 					placeholder="Idade">
 			</div>
 	</div>
-	<button type="button" class="btn btn-success" onclick="salvarUsuario()">Salvar/Atualizar</button>
+	<button type="button" class="btn btn-success" onclick="salvarUsuario()">Salvar</button>
 	<button type="button" class="btn btn-danger"
 		onclick="document.getElementById('formCadastroUser').reset();">Limpar
 		Campos</button>
@@ -67,6 +74,7 @@
 							<th scope="col">Nome</th>
 							<th scope="col">Idade</th>
 							<th scope="col">Editar</th>
+							<th scope="col">Excluir</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -74,7 +82,7 @@
 				</table>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary"
-						data-bs-dismiss="modal">Fechar</button>
+						data-bs-dismiss="modal" onclick="limparCampoTabela()">Fechar</button>
 					<button type="button" class="btn btn-primary"
 						onclick="pesquisarUsuario()">Pesquisar</button>
 				</div>
@@ -97,23 +105,29 @@
 			var id = $("#id").val();
 			var nome = $("#nome").val();
 			var idade = $("#idade").val();
+			
+			if (nome == '' || idade == ''){
+				alert("Informe todos os campos!");
+			} else {
+				$.ajax({
+					method : "POST",
+					url : "salvar",
+					data : JSON.stringify({
+						id : id,
+						nome : nome,
+						idade : idade
+					}),
+					contentType : "application/json; charset=utf-8",
+					success : function(response) {
+						alert("Salvo com sucesso!");
+						document.getElementById('formCadastroUser').reset()
+					}
+				}).fail(function(xhr, status, errorThrown) {
+					alert("Erro ao salvar!");
+				});
+			}
 
-			$.ajax({
-				method : "POST",
-				url : "salvar",
-				data : JSON.stringify({
-					id : id,
-					nome : nome,
-					idade : idade
-				}),
-				contentType : "application/json; charset=utf-8",
-				success : function(response) {
-					$("#id").val(response.id);
-					alert("Salvo com sucesso!");
-				}
-			}).fail(function(xhr, status, errorThrown) {
-				alert("Erro ao salvar!");
-			});
+			
 		}
 
 		function pesquisarUsuario() {
@@ -127,7 +141,7 @@
 							success : function(response) {
 								$('#tabelaResultPesquisar > tbody > tr').remove();
 								for (var i = 0; i < response.length; i++) {
-									$('#tabelaResultPesquisar > tbody').append('<tr><td>'+response[i].id+'</td><td>'+response[i].nome+'</td><td>'+response[i].idade+'<td><button type="button" class="btn btn-dark">Editar</button></td></tr>');
+									$('#tabelaResultPesquisar > tbody').append('<tr><td>'+response[i].id+'</td><td>'+response[i].nome+'</td><td>'+response[i].idade+'</td><td><button type="button" class="btn btn-dark" onclick="colocarEmEdicao('+response[i].id+')">Editar</button></td><td><button type="button" class="btn btn-danger" onClick="excluirRegistro('+response[i].id+')")>Excluir</button></td></tr>');
 								}
 							}
 						}).fail(function(xhr, status, errorThrown) {
@@ -135,6 +149,56 @@
 				});
 			}
 		}
+		
+		function colocarEmEdicao(id){
+			$.ajax({
+				method : "GET",
+				url : "buscarusuario",
+				data : "idUsuario=" + id,
+				success : function(response) {
+					$("#id").val(response.id);
+					$("#nome").val(response.nome);
+					$("#idade").val(response.idade);
+					
+					$('#exampleModal').modal('hide');
+					
+					$("#nomePesquisa").val('');
+					$('#tabelaResultPesquisar > tbody > tr').remove();
+					
+				}
+			}).fail(function(xhr, status, errorThrown) {
+		alert("Erro ao editar!");
+	});
+		}
+		
+		function limparCampoTabela(){
+			$("#nomePesquisa").val('');
+			$('#tabelaResultPesquisar > tbody > tr').remove();
+		}
+		
+		function excluirRegistro(id){
+			
+			if (confirm('Quer realmente excluir?')){
+			
+				$.ajax({
+					method : "DELETE",
+					url : "excluir",
+					data : "idUsuario=" + id,
+					success : function(response) {
+						alert(response);
+						
+						$('#exampleModal').modal('hide');
+						
+						$("#nomePesquisa").val('');
+						$('#tabelaResultPesquisar > tbody > tr').remove();
+						
+					}
+				}).fail(function(xhr, status, errorThrown) {
+					alert("Erro ao editar!");
+		});	
+			}
+		}
+		
 	</script>
 
 </body>
