@@ -8,6 +8,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 
+import org.springframework.web.multipart.MultipartFile;
+
 @Entity
 @SequenceGenerator(name = "seq_usuario" , sequenceName = "seq_usuario", allocationSize = 1, initialValue = 1) 
 public class Usuario implements Serializable{
@@ -21,6 +23,8 @@ public class Usuario implements Serializable{
 	private String nome;
 	
 	private int idade;
+	
+	
 
 	public Long getId() {
 		return id;
