@@ -182,8 +182,7 @@
 			
 				$.ajax({
 					method : "DELETE",
-					url : "excluir",
-					data : "idUsuario=" + id,
+					url : "http://localhost:/8080/rest-api/usuario/" + id,
 					success : function(response) {
 						alert(response);
 						
