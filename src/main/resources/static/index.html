@@ -12,8 +12,8 @@
 	crossorigin="anonymous">
 	<style>
 		html{
-			margin-left: 90px;
-			margin-right: 90px;
+			margin-left: 600px;
+			margin-right: 600px;
 			margin-top: 10%;
 		}
 	
@@ -24,7 +24,7 @@
 	<div class="form">
 		<form action="" id="formCadastroUser">
 			<div class="mb-3">
-				<h3>Spring Boot API REST - Formulário</h3>
+				<h3>Formulário</h3>
 				<label for="exampleFormControlInput1" class="form-label">Id</label>
 				<input type="number" class="form-control" id="id" placeholder="Id"
 					readonly="true">
@@ -40,6 +40,7 @@
 			</div>
 	</div>
 	<button type="button" class="btn btn-success" onclick="salvarUsuario()">Salvar</button>
+	<button type="button" class="btn btn-dark" onclick="atualizar();">Atualizar</button>
 	<button type="button" class="btn btn-danger"
 		onclick="document.getElementById('formCadastroUser').reset();">Limpar
 		Campos</button>
@@ -152,8 +153,7 @@
 		function colocarEmEdicao(id){
 			$.ajax({
 				method : "GET",
-				url : "buscarusuario",
-				data : "idUsuario=" + id,
+				url : "http://localhost:8080/rest-api/usuario/editar/" + id,
 				success : function(response) {
 					$("#id").val(response.id);
 					$("#nome").val(response.nome);
@@ -163,6 +163,9 @@
 					
 					$("#nomePesquisa").val('');
 					$('#tabelaResultPesquisar > tbody > tr').remove();
+					
+					
+					
 					
 				}
 			}).fail(function(xhr, status, errorThrown) {
@@ -181,7 +184,7 @@
 			
 				$.ajax({
 					method : "DELETE",
-					url : "http://localhost:/8080/rest-api/usuario/" + id,
+					url : "http://localhost:8080/rest-api/usuario/" + id,
 					success : function(response) {
 						alert(response);
 						
@@ -192,9 +195,37 @@
 						
 					}
 				}).fail(function(xhr, status, errorThrown) {
-					alert("Erro ao editar!");
+					alert("Erro ao excluir!");
 		});	
 			}
+		}
+		
+		function atualizar(){
+			var id = $("#id").val();
+			var nome = $("#nome").val();
+			var idade = $("#idade").val();
+			
+			if (nome == '' || idade == ''){
+				alert("Informe todos os campos!");
+			} else {
+				$.ajax({
+					method : "PUT",
+					url : "http://localhost:8080/rest-api/usuario/",
+					data : JSON.stringify({
+						id : id,
+						nome : nome,
+						idade : idade
+					}),
+					contentType : "application/json; charset=utf-8",
+					success : function(response) {
+						alert("Atualizado com sucesso!");
+						document.getElementById('formCadastroUser').reset()
+					}
+				}).fail(function(xhr, status, errorThrown) {
+					alert("Erro ao atualizar!");
+				});
+			}
+
 		}
 		
 	</script>

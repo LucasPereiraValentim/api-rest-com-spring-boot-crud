@@ -57,28 +57,36 @@ public class UsuarioController {
     
     
 	
-    @GetMapping(value = "buscarusuario")
-    public ResponseEntity<Usuario> pesquisarUsuario(@RequestParam(name = "idUsuario") Long idUsuario){
+    @GetMapping(value = "/editar/{idUsuario}")
+    public ResponseEntity<Usuario> pesquisarUsuario(@PathVariable Long idUsuario){
     	
     	Usuario usuario = this.usuarioRepository.findById(idUsuario).get();
     	
     	return new ResponseEntity<Usuario>(usuario, HttpStatus.OK);
     }
     
-    @PutMapping(value = "atualizar")
+    @PutMapping(value = "/")
     public ResponseEntity<?> atualizar(@RequestBody Usuario usuario){
     	
-    	if (usuario.getId() == null) {
-    		return new ResponseEntity<String>("ID não foi informado", HttpStatus.OK);
+    	if (usuario.getId() != null) {
+    		
+    		usuarioRepository.save(usuario);
+    		
+    		return new ResponseEntity<String>("Usuário atualizado com sucesso!", HttpStatus.OK);	
     	}
     	
-    	Usuario user = this.usuarioRepository.saveAndFlush(usuario);
-    	return new ResponseEntity<Usuario>(user, HttpStatus.OK);
+    	return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     
     }
     
     @GetMapping(value = "/{nome}")
     public ResponseEntity<List<Usuario>> buscarPorNome(@PathVariable String nome){
+    	
+    	
+    	if (nome.equalsIgnoreCase("todos")) {
+    		List<Usuario> lista = this.usuarioRepository.findAll();
+    		return new ResponseEntity<List<Usuario>>(lista, HttpStatus.OK);
+    	}
     	
     	List<Usuario> listaUsuario = this.usuarioRepository.buscarPorNome(nome.trim().toUpperCase());
     	
