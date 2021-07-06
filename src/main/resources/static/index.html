@@ -136,8 +136,7 @@
 			if (nomePesquisa != null && nomePesquisa != '') {
 				$.ajax({
 							method : "GET",
-							url : "pesquisarPorNome",
-							data : "nome=" + nomePesquisa,
+							url : "http://localhost:8080/rest-api/usuario/" + nomePesquisa,
 							success : function(response) {
 								$('#tabelaResultPesquisar > tbody > tr').remove();
 								for (var i = 0; i < response.length; i++) {

@@ -56,14 +56,7 @@ public class UsuarioController {
     
     
     
-    @GetMapping(value = "listartodos")
-    public ResponseEntity<List<Usuario>> getListaUsuario(){
-    	
-    	List<Usuario> lista = this.usuarioRepository.findAll(); // Retorna todos os registros da tabela Usuario
-    	
-    	return new ResponseEntity<List<Usuario>>(lista, HttpStatus.OK); //retorna um JSON
-    }
-    
+	
     @GetMapping(value = "buscarusuario")
     public ResponseEntity<Usuario> pesquisarUsuario(@RequestParam(name = "idUsuario") Long idUsuario){
     	
@@ -76,7 +69,7 @@ public class UsuarioController {
     public ResponseEntity<?> atualizar(@RequestBody Usuario usuario){
     	
     	if (usuario.getId() == null) {
-    		return new ResponseEntity<String>("ID não foi infomardo", HttpStatus.OK);
+    		return new ResponseEntity<String>("ID não foi informado", HttpStatus.OK);
     	}
     	
     	Usuario user = this.usuarioRepository.saveAndFlush(usuario);
@@ -84,8 +77,8 @@ public class UsuarioController {
     
     }
     
-    @GetMapping(value = "pesquisarPorNome")
-    public ResponseEntity<List<Usuario>> buscarPorNome(@RequestParam(name = "nome") String nome){
+    @GetMapping(value = "/{nome}")
+    public ResponseEntity<List<Usuario>> buscarPorNome(@PathVariable String nome){
     	
     	List<Usuario> listaUsuario = this.usuarioRepository.buscarPorNome(nome.trim().toUpperCase());
     	
