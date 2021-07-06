@@ -1,4 +1,4 @@
-package br.com.lucas.apirest.repository;
+package br.com.lucas.apirest.repositories;
 
 import java.util.List;
 
@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.com.lucas.apirest.model.Usuario;
+import br.com.lucas.apirest.models.Usuario;
 
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Long>{

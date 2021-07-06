@@ -1,4 +1,4 @@
-package br.com.lucas.apirest.model;
+package br.com.lucas.apirest.models;
 
 import java.io.Serializable;
 

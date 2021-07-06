@@ -10,15 +10,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.lucas.apirest.model.Usuario;
-import br.com.lucas.apirest.repository.UsuarioRepository;
+import br.com.lucas.apirest.models.Usuario;
+import br.com.lucas.apirest.repositories.UsuarioRepository;
 
 
 @RestController
+@RequestMapping(value = "/usuario")
 public class UsuarioController {
 	
 	//Injeção de dependência
@@ -26,11 +27,17 @@ public class UsuarioController {
 	private UsuarioRepository usuarioRepository;
 	
     
-	@PostMapping(value = "salvar")
+	@PostMapping(value = "/")
     public ResponseEntity<Usuario> salvar(@RequestBody Usuario usuario){
-    	Usuario user = this.usuarioRepository.save(usuario);
+		
+		if (usuario.getId() == null) {
+    	Usuario usuarioSalvo = this.usuarioRepository.save(usuario);
     	
-    	return new ResponseEntity<Usuario>(user, HttpStatus.CREATED);
+    	return new ResponseEntity<Usuario>(usuarioSalvo, HttpStatus.CREATED);
+    	
+		}
+		
+		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 	
 	@DeleteMapping(value = "excluir")
