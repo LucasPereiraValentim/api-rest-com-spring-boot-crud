@@ -5,6 +5,7 @@
 ### O que foi usado no projeto?
 
 - Java 8
+- Maven
 - Spring Boot
 - Spring Data 
 - PostgreSQL 13
